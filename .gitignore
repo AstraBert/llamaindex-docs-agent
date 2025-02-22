@@ -1,0 +1,6 @@
+.env
+docker/
+scripts/__pycache__/
+compose.yaml
+summary/
+llamaindex_agent.code-workspace
