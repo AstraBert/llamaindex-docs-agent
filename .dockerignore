@@ -1,6 +1,6 @@
-.env
-scripts/__pycache__/
-summary/
+.env.example
 llamaindex_agent.code-workspace
 .mypy_cache/
+scripts/
+summary/
 qdrant_storage/

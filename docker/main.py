@@ -8,8 +8,6 @@ from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.core import VectorStoreIndex, Settings, StorageContext, load_index_from_storage
 from llama_index.core.tools import QueryEngineTool, FunctionTool
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
-import os
 from llama_index.core.query_engine import RouterQueryEngine
 from llama_index.core.selectors import PydanticSingleSelector
 from llama_index.core.agent import ReActAgent
@@ -18,17 +16,22 @@ from tavily import TavilyClient
 import requests
 
 
-load_dotenv()
+f = open("/run/secrets/openai_key", "r")
+openai_api_key: str = f.read()
+f.close()
+f = open("/run/secrets/tavily_key", "r")
+tavily_api_key: str = f.read()
+f.close()
 
-tavily_client = TavilyClient(api_key=os.getenv("tavily_api_key"))
-Settings.llm = OpenAI(api_key=os.getenv("openai_api_key"), model="gpt-4o-mini")
+tavily_client = TavilyClient(api_key=tavily_api_key)
+Settings.llm = OpenAI(api_key=openai_api_key, model="gpt-4o-mini")
 Settings.chunk_size = 1000
 Settings.chunk_overlap = 50
-Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small", api_key=os.getenv("openai_api_key"))
-qc = QdrantClient("http://localhost:6333")
+Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small", api_key=openai_api_key)
+qc = QdrantClient(host="vector_db", port=6333)
 vector_store = QdrantVectorStore(client=qc, collection_name="llamaindex-docs", enable_hybrid=True)
 v_index = VectorStoreIndex.from_vector_store(vector_store=vector_store)
-s_context = StorageContext.from_defaults(persist_dir="../summary")
+s_context = StorageContext.from_defaults(persist_dir="/app/summary")
 s_index = load_index_from_storage(storage_context=s_context)
 v_engine = v_index.as_query_engine()
 s_engine = s_index.as_query_engine()
