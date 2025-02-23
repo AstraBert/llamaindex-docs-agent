@@ -10,4 +10,4 @@ RUN bash shell/conda_env.shell
 RUN bash shell/qdrant_setup.shell
 
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["bash", "/app/shell/run_app.sh"]
