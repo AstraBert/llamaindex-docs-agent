@@ -4,7 +4,7 @@ docker compose up vector_db -d
 
 conda env create -f environment.yml
 
-conda activate environment.yml
+conda activate llamaindex-docs
 
 python3 scripts/loadData.py
 
